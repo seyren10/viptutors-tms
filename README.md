@@ -7,7 +7,7 @@ VIP Tutors Task Management System (TMS) backend and frontend.
 ## 📚 Backend Documentation
 
 You can find the full API documentation here:  
-[Postman Workspace](https://web.postman.co/workspace/My-Workspace~97e04c83-634f-4683-8cc7-7cf61a5d161e/collection/38781653-b2e81f8c-cff5-427a-b37e-0fb9b59ea68e?action=share&source=copy-link&creator=38781653)
+[Postman Workspace](https://www.postman.com/mission-geoscientist-83889483/workspace/public-workspace/collection/38781653-b2e81f8c-cff5-427a-b37e-0fb9b59ea68e?action=share&creator=38781653)
 
 ---
 
