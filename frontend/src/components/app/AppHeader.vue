@@ -10,19 +10,22 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { logout } from '@/features/user/api';
 import { useRouter } from 'vue-router';
 import { queryClient } from '@/services/vue-query';
+import { logoutMutationOptions } from '@/features/user/queries';
 
 const userStore = useUserStore()
 const { user, userInitials } = storeToRefs(userStore)
 const router = useRouter()
 
-const { mutate: logoutMutate, isPending } = useMutation({
-    mutationFn: logout,
-    onSuccess: () => {
-        queryClient.removeQueries();
+const { mutateAsync: logoutMutate, isPending, isSuccess } = useMutation(logoutMutationOptions)
+
+const handleLogout = async () => {
+    await logoutMutate()
+
+    if (isSuccess) {
         router.replace({ name: 'login' })
-        user.value = null;
+        user.value = null
     }
-})
+}
 </script>
 
 <template>
@@ -49,7 +52,7 @@ const { mutate: logoutMutate, isPending } = useMutation({
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem @select="() => logoutMutate()">
+                <DropdownMenuItem @select="() => handleLogout()">
                     <LogOut />
                     Logout
                 </DropdownMenuItem>

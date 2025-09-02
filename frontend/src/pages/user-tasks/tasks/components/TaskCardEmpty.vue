@@ -8,11 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
     <Card class="border-dashed">
         <CardHeader>
             <CardTitle>You dont have any tasks</CardTitle>
-            <CardDescription>Start by adding new tasks.</CardDescription>
+            <CardDescription>Tasks will be displayed here as soon as you start adding them.</CardDescription>
         </CardHeader>
-        <CardContent>
-            <Button>Add new Task</Button>
-        </CardContent>
     </Card>
 </template>
 

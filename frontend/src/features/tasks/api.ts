@@ -15,3 +15,6 @@ export const createTask = async (payload: CreateTaskPayload) => {
   const res = await httpClient.post<{ data: Task }>('/api/tasks', payload)
   return res.data.data
 }
+export const deleteTask = async (taskId: number) => {
+  await httpClient.delete(`/api/tasks/${taskId}`)
+}

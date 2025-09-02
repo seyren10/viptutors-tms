@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getTasksQueryOption, useCreateTask, useGetTasks, useUpdateTask } from '@/features/tasks/queries';
+import { getTasksQueryOption, useCreateTask, } from '@/features/tasks/queries';
 import TaskCard from './components/TaskCard.vue';
 import TaskCardSkeleton from './components/TaskCardSkeleton.vue';
 import TaskCardEmpty from './components/TaskCardEmpty.vue';
@@ -9,6 +9,9 @@ import { onMounted, ref } from 'vue';
 import TaskForm from './components/TaskForm.vue';
 import type { TaskSchema } from '@/features/tasks/type';
 import { useQuery } from '@tanstack/vue-query';
+import { useUserStore } from '@/features/user/store';
+import { storeToRefs } from 'pinia';
+import AppUserCard from '@/components/app/AppUserCard.vue';
 
 
 const { data: tasks, isPending, } = useQuery(getTasksQueryOption())
@@ -22,10 +25,15 @@ const handleCreateTask = async (data: TaskSchema) => {
         showFormDialog.value = false
     }
 }
+
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 </script>
 
 <template>
     <div class="space-y-4">
+
+        <AppUserCard :user="user" v-if="user" />
 
         <div class="flex gap-4 items-center justify-between flex-wrap">
             <h1 class="text-lg font-bold">List of tasks</h1>

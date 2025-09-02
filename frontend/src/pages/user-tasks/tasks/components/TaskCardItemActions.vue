@@ -1,17 +1,22 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { useUpdateTask } from '@/features/tasks/queries';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useDeleteTask, useUpdateTask } from '@/features/tasks/queries';
 import type { Task, TaskPriority, TaskSchema, TaskStatus, UpdateTaskPayload } from '@/features/tasks/type';
-import { Check, Clock, Edit2, LoaderCircle, MoreVertical } from 'lucide-vue-next';
+import { Check, Clock, Edit2, LoaderCircle, MoreVertical, Trash2 } from 'lucide-vue-next';
 import TaskForm from './TaskForm.vue';
 import { ref } from 'vue';
+import { useUserStore } from '@/features/user/store';
+import { storeToRefs } from 'pinia';
 
 const props = defineProps<{
     task: Task
 }>()
 
 const { mutateAsync: updateTaskMutate, isPending, isSuccess } = useUpdateTask()
+const { mutate: deleteTaskMutate, isPending: isDeleting } = useDeleteTask()
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 
 const handleChangeStatus = (status: TaskStatus) => {
     updateTaskMutate({
@@ -42,12 +47,14 @@ const handleUpdateTask = async (data: TaskSchema) => {
         showUpdateDialog.value = false
     }
 }
+
+
 </script>
 <template>
     <DropdownMenu>
         <DropdownMenuTrigger as-child>
             <Button variant="ghost" size="icon">
-                <LoaderCircle class="animate-spin" v-if="isPending" />
+                <LoaderCircle class="animate-spin" v-if="isPending || isDeleting" />
                 <MoreVertical v-else />
             </Button>
         </DropdownMenuTrigger>
@@ -77,6 +84,16 @@ const handleUpdateTask = async (data: TaskSchema) => {
                     </DropdownMenuSubContent>
                 </DropdownMenuSub>
             </DropdownMenuGroup>
+
+            <template v-if="user?.isAdmin">
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>Danger Zone</DropdownMenuLabel>
+                <DropdownMenuItem class="text-destructive focus:text-destructive"
+                    @select="() => deleteTaskMutate(task.id)">
+                    <Trash2 class="text-destructive" />
+                    Delete
+                </DropdownMenuItem>
+            </template>
         </DropdownMenuContent>
     </DropdownMenu>
     <TaskForm v-model:dialog="showUpdateDialog" :initial-values="{

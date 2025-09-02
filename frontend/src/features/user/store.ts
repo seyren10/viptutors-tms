@@ -2,10 +2,13 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import type { User } from './type'
 import { queryClient } from '@/services/vue-query'
-import { userQueryOptions } from './queries'
+import { logoutMutationOptions, userQueryOptions } from './queries'
+import { useMutation } from '@tanstack/vue-query'
+import { useRouter } from 'vue-router'
 
 export const useUserStore = defineStore('users', () => {
   const user = ref<User | null>(null)
+  const router = useRouter()
 
   const userInitials = computed(() =>
     user.value?.name
@@ -18,9 +21,20 @@ export const useUserStore = defineStore('users', () => {
     user.value = resUser
   }
 
+  const signOut = async () => {
+    const { mutateAsync, isSuccess } = useMutation(logoutMutationOptions)
+    await mutateAsync()
+
+    if (isSuccess) {
+      router.replace({ name: 'login' })
+      user.value = null
+    }
+  }
+
   return {
     user,
     getUser,
     userInitials,
+    signOut,
   }
 })

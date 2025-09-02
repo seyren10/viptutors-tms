@@ -1,6 +1,6 @@
 import { queryOptions, useMutation, useQuery } from '@tanstack/vue-query'
 import type { GetTasksQueryParams, UpdateTaskPayload } from './type'
-import { createTask, getTasks, updateTask } from './api'
+import { createTask, deleteTask, getTasks, updateTask } from './api'
 import { queryClient } from '@/services/vue-query'
 import { toast } from 'vue-sonner'
 
@@ -29,5 +29,16 @@ export const useUpdateTask = () =>
         queryKey: ['tasks'],
       })
       toast.info('Task has been updated.')
+    },
+  })
+
+export const useDeleteTask = () =>
+  useMutation({
+    mutationFn: deleteTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tasks'],
+      })
+      toast.info('Task has been Deleted.')
     },
   })

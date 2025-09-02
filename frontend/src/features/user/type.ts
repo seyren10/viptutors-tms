@@ -10,12 +10,13 @@ export type RegisterPayload = {
 }
 
 export type User = {
+  id: number
   name: string
   email: string
   createdAt: string
   updatedAt: string
   isAdmin?: boolean
-  taskStats?: UserTaskStats
+  tasksStats?: UserTaskStats
 }
 
 export type UserTaskStats = {
