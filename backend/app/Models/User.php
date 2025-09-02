@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\TaskStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -54,5 +55,30 @@ class User extends Authenticatable
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    /**
+     * Scope to include task stats (total, completed, pending).
+     */
+    public function scopeWithTaskStats(Builder $query): Builder
+    {
+        return $query->withCount([
+            'tasks',
+            'tasks as completed_tasks_count' => function (Builder $q) {
+                $q->where('status', TaskStatus::COMPLETED);
+            },
+            'tasks as pending_tasks_count' => function (Builder $q) {
+                $q->where('status', TaskStatus::PENDING);
+            },
+        ]);
+    }
+
+    public function loadTaskStats(): static
+    {
+        return $this->loadCount([
+            'tasks',
+            'tasks as completed_tasks_count' => fn($q) => $q->where('status', TaskStatus::COMPLETED),
+            'tasks as pending_tasks_count'   => fn($q) => $q->where('status', TaskStatus::PENDING),
+        ]);
     }
 }
