@@ -1,7 +1,6 @@
 import { queryOptions, useMutation, useQuery } from '@tanstack/vue-query'
 import { getUser, login } from './api'
-import { useUserStore } from './store'
-import { storeToRefs } from 'pinia'
+import { queryClient } from '@/services/vue-query'
 
 export const useLogin = () =>
   useMutation({

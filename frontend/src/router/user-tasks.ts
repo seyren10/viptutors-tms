@@ -1,3 +1,4 @@
+import { Component } from 'lucide-vue-next'
 import type { RouteRecordRaw } from 'vue-router'
 
 export const useTasksRoute: RouteRecordRaw = {
@@ -7,4 +8,11 @@ export const useTasksRoute: RouteRecordRaw = {
   meta: {
     requiresAuth: true,
   },
+  children: [
+    {
+      path: '',
+      name: 'userTasksIndex',
+      component: () => import('@/pages/user-tasks/tasks/TasksIndex.vue'),
+    },
+  ],
 }

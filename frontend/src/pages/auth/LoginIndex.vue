@@ -11,6 +11,8 @@ import { Alert, AlertTitle } from '@/components/ui/alert';
 import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
 import type { LaravelError } from '@/types/http';
 import { CircleX } from 'lucide-vue-next';
+import { queryClient } from '@/services/vue-query';
+import { getTasks } from '@/features/tasks/api';
 
 const { mutate: loginMutate, isPending, isError } = useLogin()
 const router = useRouter()
@@ -24,6 +26,7 @@ const handleLogin = () => {
     loginMutate(loginPayload.value, {
         onSuccess: () => {
             router.replace({ name: 'userTasks' })
+            queryClient.invalidateQueries({ queryKey: ['tasks'] })
         },
         onError: (err) => {
             errorMessage.value = (err as LaravelError).response?.data.message
